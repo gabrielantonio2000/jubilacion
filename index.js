@@ -1,10 +1,4 @@
-const readline = require("readline");
-
-// Crear una interfaz de readline para leer desde la consola
-const rl = readline.createInterface({
-  input: process.stdin,
-  output: process.stdout,
-});
+// jubilacion.js
 
 // Función para determinar si la persona aplica a jubilación
 function aplicaAJubilacion(edad, aportesIGSS) {
@@ -29,25 +23,42 @@ function validarEdad(edad) {
   return null; // Edad válida
 }
 
-// Solicitar al usuario que ingrese la edad
-rl.question("Ingrese la edad de la persona: ", (edadInput) => {
-  const edad = parseInt(edadInput);
-  const errorEdad = validarEdad(edad);
+// Exportar las funciones para usarlas en las pruebas
+module.exports = { aplicaAJubilacion, validarEdad };
 
-  if (errorEdad) {
-    console.log(errorEdad);
-    rl.close();
-  } else {
-    // Solicitar la cantidad de aportes si la edad es válida
-    rl.question("Ingrese la cantidad de aportes al IGSS: ", (aportesInput) => {
-      const aportesIGSS = parseInt(aportesInput);
+// interacción con el usuario (para node)
+if (require.main === module) {
+  const readline = require("readline");
 
-      // Determinar si la persona aplica a jubilación y mostrar el resultado
-      const resultado = aplicaAJubilacion(edad, aportesIGSS);
-      console.log(resultado);
+  // Crear una interfaz de readline para leer desde la consola
+  const rl = readline.createInterface({
+    input: process.stdin,
+    output: process.stdout,
+  });
 
-      // Cerrar la interfaz de readline
+  // Solicitar al usuario que ingrese la edad
+  rl.question("Ingrese la edad de la persona: ", (edadInput) => {
+    const edad = parseInt(edadInput);
+    const errorEdad = validarEdad(edad);
+
+    if (errorEdad) {
+      console.log(errorEdad);
       rl.close();
-    });
-  }
-});
+    } else {
+      // Solicitar la cantidad de aportes si la edad es válida
+      rl.question(
+        "Ingrese la cantidad de aportes al IGSS: ",
+        (aportesInput) => {
+          const aportesIGSS = parseInt(aportesInput);
+
+          // Determinar si la persona aplica a jubilación y mostrar el resultado
+          const resultado = aplicaAJubilacion(edad, aportesIGSS);
+          console.log(resultado);
+
+          // Cerrar la interfaz de readline
+          rl.close();
+        }
+      );
+    }
+  });
+}
